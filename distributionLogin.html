@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        /* Your styles here */
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Email" required><br>
+            <input type="password" id="password" placeholder="Password" required><br>
+            <input type="urlApi" id="urlApi" placeholder="urlBase" required><br>
+            <button type="button" id="login" onclick="loginAndActivate()">Login</button>
+        </form>
+
+        <div id="activationButtons" style="display: none;">
+            <button onclick="activateAccount()">Activate</button>
+            <button onclick="deactivateAccount()">Deactivate</button>
+        </div>
+    </div>
+    <div id="deactivateModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <label for="reason">Select a reason for deactivation:</label>
+            <select id="reason" required>
+                <option value="almoço">Almoço</option>
+                <option value="reunião">Reunião</option>
+                <option value="fim-do-expediente">Fim do expediente</option>
+                <option value="outros">Outros</option>
+            </select>
+            <button onclick="confirmDeactivation()">Confirm Deactivation</button>
+        </div>
+    </div>
+
+    <script>
+        let loggedInUser; // Variable to store the logged-in user object
+
+        function loginAndActivate() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            let urlApi = document.getElementById("urlApi").value;
+
+            // Add "/api/v1/" to the urlApi if it doesn't already contain it
+            if (!urlApi.endsWith("/api/v1/")) {
+                urlApi += "/api/v1/";
+            }
+
+            // Fetch request example
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            var raw = JSON.stringify({
+                "email": email,
+                "password": password,
+                "urlApi": urlApi
+            });
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            fetch("https://n8n.integracao.cloud/webhook/getUser", requestOptions)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(user => {
+                    // Store the user object
+                    loggedInUser = user;
+                    // Display the activation/deactivation buttons only if the login and activation were successful
+                    document.getElementById('activationButtons').style.display = 'block';
+                    console.log(loggedInUser);
+                })
+                .catch(error => {
+                    console.error('Error:', error.message);
+                    alert('Error: Unable to activate account. Please try again.');
+                });
+        }
+
+        function activateAccount() {
+            if (loggedInUser) {
+                // Fetch request example
+                var myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+
+                var userBody = JSON.stringify({
+                    "user": loggedInUser
+                });
+
+                var activateOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: userBody,
+                    redirect: 'follow'
+                };
+
+                fetch("https://n8n.integracao.cloud/webhook/activateUser", activateOptions)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        // Add logic to handle successful activation
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert('Activation response:\n' + JSON.stringify(data));
+                    })
+                    .catch(error => {
+                        console.error('Error:', error.message);
+                        alert('Error: Unable to activate account. Please try again.');
+                    });
+            } else {
+                alert('Error: User not logged in.');
+            }
+        }
+
+        function deactivateAccount() {
+            if (loggedInUser) {
+                // Show the deactivate modal
+                document.getElementById('deactivateModal').style.display = 'block';
+            } else {
+                alert('Error: User not logged in.');
+            }
+        }
+
+        function confirmDeactivation() {
+            // Get the selected reason from the dropdown
+            const reason = document.getElementById('reason').value;
+
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            var userBody = JSON.stringify({
+                "user": loggedInUser,
+                "reason": reason
+            });
+
+            var deactivateOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: userBody,
+                redirect: 'follow'
+            };
+
+            fetch("https://n8n.integracao.cloud/webhook/deactivateUser", deactivateOptions)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    // Add logic to handle successful deactivation
+                    return response.json();
+                })
+                .then(data => {
+                    alert('Deactivation response:\n' + JSON.stringify(data));
+                })
+                .catch(error => {
+                    console.error('Error:', error.message);
+                    alert('Error: Unable to deactivate account. Please try again.');
+                });
+
+            // Close the deactivate modal
+            document.getElementById('deactivateModal').style.display = 'none';
+        }
+    </script>
+
+</body>
+
+</html>
