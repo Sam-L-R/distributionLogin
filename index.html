@@ -16,7 +16,12 @@
         <form id="loginForm">
             <input type="email" id="email" placeholder="Email" required><br>
             <input type="password" id="password" placeholder="Password" required><br>
-            <input type="urlApi" id="urlApi" placeholder="urlBase" required><br>
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <span>https://</span>
+                <input type="urlApi" id="urlApi" placeholder="urlBase" required><br>
+                <span>/api/v1/</span>
+            </div>
+
             <button type="button" id="login" onclick="loginAndActivate()">Login</button>
         </form>
 
@@ -58,7 +63,7 @@
             var raw = JSON.stringify({
                 "email": email,
                 "password": password,
-                "urlApi": urlApi
+                "urlApi": `https://${urlApi}`
             });
 
             var requestOptions = {
