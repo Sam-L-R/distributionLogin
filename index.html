@@ -143,7 +143,20 @@
 
         function confirmDeactivation() {
             // Get the selected reason from the dropdown
-            const reason = document.getElementById('reason').value;
+            var reason = document.getElementById('reason').value;
+
+            if (reason === 'Outros') {
+                // Prompt the user for a custom reason
+                const customReason = prompt('Por favor informe o motivo:');
+                if (customReason === null || customReason.trim() === '') {
+                    // User canceled or provided an empty reason
+                    alert('Por favor informe o motivo:');
+                    return;
+                }
+
+                // Update the userBody with the custom reason
+                var reason = customReason;
+            }
 
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
