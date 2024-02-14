@@ -40,7 +40,26 @@
                 <option value="Fim-do-expediente">Fim do expediente</option>
                 <option value="Outros">Outros</option>
             </select>
+            <label for="selector">Selecione o departamento de desativação:</label>
+            <select id="selector" required>
+                <option value="Message Distribution Suporte">Suporte</option>
+                <option value="Message Distribution Robo">Robô</option>
+                <option value="Message Distribution Integracao">Integração</option>
+                <option value="Message Distribution Waba">Waba</option>
+            </select>
             <button onclick="confirmDeactivation()">Confirmar Desativação</button>
+        </div>
+    </div>
+    <div id="departmentModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <label for="selector">Selecione o departamento de ativação:</label>
+            <select id="selector" required>
+                <option value="Message Distribution Suporte">Suporte</option>
+                <option value="Message Distribution Robo">Robô</option>
+                <option value="Message Distribution Integracao">Integração</option>
+                <option value="Message Distribution Waba">Waba</option>
+            </select>
+            <button onclick="confirmDepartment()">Confirmar Ativação</button>
         </div>
     </div>
 
@@ -97,36 +116,8 @@
 
         function activateAccount() {
             if (loggedInUser) {
-                // Fetch request example
-                var myHeaders = new Headers();
-                myHeaders.append("Content-Type", "application/json");
-
-                var userBody = JSON.stringify({
-                    "user": loggedInUser
-                });
-
-                var activateOptions = {
-                    method: 'POST',
-                    headers: myHeaders,
-                    body: userBody,
-                    redirect: 'follow'
-                };
-
-                fetch("https://n8n.integracao.cloud/webhook/activateUser", activateOptions)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-                        // Add logic to handle successful activation
-                        return response.json();
-                    })
-                    .then(data => {
-                        alert('Activation response:\n' + JSON.stringify(data));
-                    })
-                    .catch(error => {
-                        console.error('Error:', error.message);
-                        alert('Error: Unable to activate account. Please try again.');
-                    });
+                // Show the department modal
+                document.getElementById('departmentModal').style.display = 'block';
             } else {
                 alert('Error: User not logged in.');
             }
@@ -163,7 +154,8 @@
 
             var userBody = JSON.stringify({
                 "user": loggedInUser,
-                "reason": reason
+                "reason": reason,
+                "department": document.getElementById('selector').value
             });
 
             var deactivateOptions = {
@@ -191,6 +183,38 @@
 
             // Close the deactivate modal
             document.getElementById('deactivateModal').style.display = 'none';
+        }
+        function confirmDepartment() {
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            var userBody = JSON.stringify({
+                "user": loggedInUser,
+                "department": document.getElementById('selector').value
+            });
+
+            var activateOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: userBody,
+                redirect: 'follow'
+            };
+
+            fetch("https://n8n.integracao.cloud/webhook/activateUser", activateOptions)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    // Add logic to handle successful activation
+                    return response.json();
+                })
+                .then(data => {
+                    alert('Activation response:\n' + JSON.stringify(data));
+                })
+                .catch(error => {
+                    console.error('Error:', error.message);
+                    alert('Error: Unable to activate account. Please try again.');
+                });
         }
     </script>
 
