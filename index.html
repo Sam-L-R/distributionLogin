@@ -7,7 +7,6 @@
     <title>Login Page</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-</head>
 
 <body>
 
@@ -40,8 +39,8 @@
                 <option value="Fim-do-expediente">Fim do expediente</option>
                 <option value="Outros">Outros</option>
             </select>
-            <label for="selector">Selecione o departamento de desativação:</label>
-            <select id="selector" required>
+            <label for="selector1">Selecione o departamento de desativação:</label>
+            <select id="selector1" required>
                 <option value="Message Distribution Suporte">Suporte</option>
                 <option value="Message Distribution Robo">Robô</option>
                 <option value="Message Distribution Integracao">Integração</option>
@@ -52,8 +51,8 @@
     </div>
     <div id="departmentModal" class="modal" style="display: none;">
         <div class="modal-content">
-            <label for="selector">Selecione o departamento de ativação:</label>
-            <select id="selector" required>
+            <label for="selector2">Selecione o departamento de ativação:</label>
+            <select id="selector2" required>
                 <option value="Message Distribution Suporte">Suporte</option>
                 <option value="Message Distribution Robo">Robô</option>
                 <option value="Message Distribution Integracao">Integração</option>
@@ -155,7 +154,7 @@
             var userBody = JSON.stringify({
                 "user": loggedInUser,
                 "reason": reason,
-                "department": document.getElementById('selector').value
+                "department": document.getElementById('selector1').value
             });
 
             var deactivateOptions = {
@@ -190,7 +189,7 @@
 
             var userBody = JSON.stringify({
                 "user": loggedInUser,
-                "department": document.getElementById('selector').value
+                "department": document.getElementById('selector2').value
             });
 
             var activateOptions = {
@@ -215,6 +214,7 @@
                     console.error('Error:', error.message);
                     alert('Error: Unable to activate account. Please try again.');
                 });
+            document.getElementById('departmentModal').style.display = 'none';
         }
     </script>
 
