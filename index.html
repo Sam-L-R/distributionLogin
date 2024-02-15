@@ -9,10 +9,16 @@
 </head>
 
 <body>
+    <header>
+        <div class="logo">
+            <img src="logo-ikatec-new.webp" alt="Company Logo" class="logo-image">
+        </div>
+    </header>
 
     <div class="container">
+
         <h2>Login Distribuição Automática</h2>
-        <form id="loginForm">
+        <form id="loginForm" class="formDigi">
             <input type="email" id="email" placeholder="Email da URL" required><br>
             <input type="password" id="password" placeholder="Password da URL" required><br>
             <div style="display: flex; flex-direction: row; align-items: center;">
@@ -32,7 +38,7 @@
     </div>
     <div id="deactivateModal" class="modal" style="display: none;">
         <div class="modal-content">
-            <label for="reason">Select a reason for deactivation:</label>
+            <label for="reason">Selecione o motivo:</label>
             <select id="reason" required>
                 <option value="Almoço">Almoço</option>
                 <option value="Reunião">Reunião</option>
