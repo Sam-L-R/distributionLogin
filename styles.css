@@ -82,8 +82,9 @@ button:hover {
 
 .modal-content {
   line-height: 30px;
-  background-color: #fff;
+  background-color: #201c1c;
   padding: 20px;
+  color: white;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -91,9 +92,10 @@ button:hover {
 
 select {
   padding: 10px;
-  border: 1px solid #ccc;
   border-radius: 4px;
   width: 100%;
+  color: white;
+  background-color: #706c6c;
   box-sizing: border-box;
 }
 
@@ -105,4 +107,19 @@ select {
   margin-left: 96px;
   align-items: center;
   display: flex;
+}
+
+.close {
+  color: #aaaaaa;
+  float: inline-end;
+  font-size: 38px;
+  font-weight: bold;
+  margin-top: 25px;
+}
+
+.close:hover,
+.close:focus {
+  color: #ff4006;
+  text-decoration: none;
+  cursor: pointer;
 }

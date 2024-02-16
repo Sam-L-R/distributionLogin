@@ -40,7 +40,6 @@ function loginAndActivate() {
       // Display the activation/deactivation buttons only if the login and activation were successful
       document.getElementById('login').style.display = 'none';
       document.getElementById('activationButtons').style.display = 'block';
-      console.log(loggedInUser);
     })
     .catch(error => {
       console.error('Error:', error.message);
@@ -66,7 +65,7 @@ function deactivateAccount() {
   }
 }
 
-function confirmDeactivation() {
+function confirmDeactivation(modal) {
   // Get the selected reason from the dropdown
   var reason = document.getElementById('reason').value;
 
@@ -151,3 +150,21 @@ function confirmDepartment() {
     });
   document.getElementById('departmentModal').style.display = 'none';
 }
+
+function closeModal(modalId) {
+  document.getElementById(modalId).style.display = 'none';
+}
+
+// Get the modal elements
+var deactivateModal = document.getElementById('deactivateModal');
+var departmentModal = document.getElementById('departmentModal');
+
+// Close the modal if the user clicks outside of it
+document.addEventListener('click', function (event) {
+  if (event.target == deactivateModal) {
+    deactivateModal.style.display = 'none';
+  }
+  if (event.target == departmentModal) {
+    departmentModal.style.display = 'none';
+  }
+});
