@@ -38,7 +38,7 @@ function loginAndActivate() {
       // Store the user object
       loggedInUser = user;
       // Display the activation/deactivation buttons only if the login and activation were successful
-      document.getElementById('login').style.display = 'none';
+      document.getElementById('login').style.display = 'block';
       document.getElementById('activationButtons').style.display = 'block';
     })
     .catch(error => {
