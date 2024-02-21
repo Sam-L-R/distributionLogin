@@ -209,26 +209,6 @@ function confirmDepartment() {
     });
   document.getElementById('departmentModal').style.display = 'none';
 
-  var rolesList = document.getElementById('rolesList');
-
-  // Check if roles array is not empty
-  if (roles.length > 0) {
-    // Create a variable to store the HTML content
-    var html = '';
-
-    // Loop through each role in the array
-    roles.forEach(function (role) {
-      // Create the HTML for each role
-      html += '<div class="role">' + role + '</div>';
-    });
-
-    // Set the innerHTML of the rolesList element to the generated HTML
-    rolesList.innerHTML = 'Distribuição está ativa para:' + html;
-  } else {
-    // If roles array is empty, you can display a message or do something else
-    rolesList.innerHTML = 'Nenhuma Distribuição ativa';
-  }
-
 }
 
 function closeModal(modalId) {
