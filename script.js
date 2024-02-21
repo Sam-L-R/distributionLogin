@@ -27,24 +27,77 @@ function loginAndActivate() {
     redirect: 'follow'
   };
 
-  fetch("https://n8n.integracao.cloud/webhook/getUser", requestOptions)
+  fetch("https://n8n.integracao.cloud/webhook-test/getUser", requestOptions)
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       return response.json();
+
     })
     .then(user => {
       // Store the user object
       loggedInUser = user;
+      var roles = user.roles;
+      console.log(loggedInUser)
+
       // Display the activation/deactivation buttons only if the login and activation were successful
-      document.getElementById('login').style.display = 'none';
+      document.getElementById('login').style.display = 'block';
       document.getElementById('activationButtons').style.display = 'block';
+
+
+      document.getElementById('rolesList').style.display = 'block';
+      // Get the element where you want to display the roles
+      var rolesList = document.getElementById('rolesList');
+
+      // Check if roles array is not empty
+      if (roles.length > 0) {
+        // Create a variable to store the HTML content
+        var html = '';
+
+        // Loop through each role in the array
+        roles.forEach(function (role) {
+          // Create the HTML for each role
+          html += '<div class="role">' + role + '</div>';
+        });
+
+        // Set the innerHTML of the rolesList element to the generated HTML
+        rolesList.innerHTML = 'Distribuição está ativa para:' + html;
+      } else {
+        // If roles array is empty, you can display a message or do something else
+        rolesList.innerHTML = 'Nenhuma Distribuição ativa';
+      }
+
     })
     .catch(error => {
       console.error('Error:', error.message);
       alert('Error: Senha incorreta, ou erro do servidor. Tente novamente.');
     });
+}
+
+function rolesActive() {
+
+  document.getElementById('rolesList').style.display = 'block';
+  // Get the element where you want to display the roles
+  var rolesList = document.getElementById('rolesList');
+
+  // Check if roles array is not empty
+  if (roles.length > 0) {
+    // Create a variable to store the HTML content
+    var html = '';
+
+    // Loop through each role in the array
+    roles.forEach(function (role) {
+      // Create the HTML for each role
+      html += '<div class="role">' + role + '</div>';
+    });
+
+    // Set the innerHTML of the rolesList element to the generated HTML
+    rolesList.innerHTML = 'Distribuição está ativa para:' + html;
+  } else {
+    // If roles array is empty, you can display a message or do something else
+    rolesList.innerHTML = 'Nenhuma Distribuição ativa';
+  }
 }
 
 function activateAccount() {
@@ -116,6 +169,12 @@ function confirmDeactivation(modal) {
 
   // Close the deactivate modal
   document.getElementById('deactivateModal').style.display = 'none';
+
+  document.getElementById('rolesList').style.display = 'block';
+  // Get the element where you want to display the roles
+
+
+
 }
 function confirmDepartment() {
   var myHeaders = new Headers();
@@ -149,6 +208,27 @@ function confirmDepartment() {
       alert('Error: Unable to activate account. Please try again.');
     });
   document.getElementById('departmentModal').style.display = 'none';
+
+  var rolesList = document.getElementById('rolesList');
+
+  // Check if roles array is not empty
+  if (roles.length > 0) {
+    // Create a variable to store the HTML content
+    var html = '';
+
+    // Loop through each role in the array
+    roles.forEach(function (role) {
+      // Create the HTML for each role
+      html += '<div class="role">' + role + '</div>';
+    });
+
+    // Set the innerHTML of the rolesList element to the generated HTML
+    rolesList.innerHTML = 'Distribuição está ativa para:' + html;
+  } else {
+    // If roles array is empty, you can display a message or do something else
+    rolesList.innerHTML = 'Nenhuma Distribuição ativa';
+  }
+
 }
 
 function closeModal(modalId) {
