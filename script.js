@@ -42,7 +42,7 @@ function loginAndActivate() {
       console.log(loggedInUser)
 
       // Display the activation/deactivation buttons only if the login and activation were successful
-      document.getElementById('login').style.display = 'block';
+      document.getElementById('login').style.display = 'none';
       document.getElementById('activationButtons').style.display = 'block';
 
 
@@ -169,12 +169,7 @@ function confirmDeactivation(modal) {
 
   // Close the deactivate modal
   document.getElementById('deactivateModal').style.display = 'none';
-
-  document.getElementById('rolesList').style.display = 'block';
-  // Get the element where you want to display the roles
-
-
-
+  loginAndActivate()
 }
 function confirmDepartment() {
   var myHeaders = new Headers();
@@ -208,6 +203,7 @@ function confirmDepartment() {
       alert('Error: Unable to activate account. Please try again.');
     });
   document.getElementById('departmentModal').style.display = 'none';
+  loginAndActivate()
 
 }
 
