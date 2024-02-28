@@ -39,7 +39,7 @@ function loginAndActivate() {
       // Store the user object
       loggedInUser = user;
       var roles = user.roles;
-      console.log(loggedInUser)
+      // console.log(loggedInUser)
 
       // Display the activation/deactivation buttons only if the login and activation were successful
       document.getElementById('login').style.display = 'none';
