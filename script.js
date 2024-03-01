@@ -1,6 +1,9 @@
-let loggedInUser; // Variable to store the logged-in user object
+// Variable to store the logged-in user object
+let loggedInUser;
 
+// Function to log in and activate user
 function loginAndActivate() {
+  // Get user input values
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   let urlApi = document.getElementById("urlApi").value;
@@ -10,64 +13,41 @@ function loginAndActivate() {
     urlApi += "/api/v1/";
   }
 
-  // Fetch request example
-  var myHeaders = new Headers();
+  // Set request headers
+  const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
-  var raw = JSON.stringify({
+  // Create JSON data for the request
+  const raw = JSON.stringify({
     "email": email,
     "password": password,
     "urlApi": `https://${urlApi}`
   });
 
-  var requestOptions = {
+  // Set fetch request options
+  const requestOptions = {
     method: 'POST',
     headers: myHeaders,
     body: raw,
     redirect: 'follow'
   };
 
+  // Make a fetch request to get user data
   fetch("https://n8n.integracao.cloud/webhook/getUser", requestOptions)
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       return response.json();
-
     })
     .then(user => {
-      // Store the user object
+      // Store the logged-in user object
       loggedInUser = user;
-      var roles = user.roles;
-      // console.log(loggedInUser)
-
-      // Display the activation/deactivation buttons only if the login and activation were successful
+      // Display user roles
+      displayRoles(user.roles);
+      // Hide login button and show activation buttons
       document.getElementById('login').style.display = 'none';
       document.getElementById('activationButtons').style.display = 'block';
-
-
-      document.getElementById('rolesList').style.display = 'block';
-      // Get the element where you want to display the roles
-      var rolesList = document.getElementById('rolesList');
-
-      // Check if roles array is not empty
-      if (roles.length > 0) {
-        // Create a variable to store the HTML content
-        var html = '';
-
-        // Loop through each role in the array
-        roles.forEach(function (role) {
-          // Create the HTML for each role
-          html += '<div class="role">' + role + '</div>';
-        });
-
-        // Set the innerHTML of the rolesList element to the generated HTML
-        rolesList.innerHTML = 'Distribuição está ativa para:' + html;
-      } else {
-        // If roles array is empty, you can display a message or do something else
-        rolesList.innerHTML = 'Nenhuma Distribuição ativa';
-      }
-
     })
     .catch(error => {
       console.error('Error:', error.message);
@@ -75,40 +55,31 @@ function loginAndActivate() {
     });
 }
 
-function rolesActive() {
+// Function to display user roles
+function displayRoles(roles) {
+  const rolesList = document.getElementById('rolesList');
+  rolesList.style.display = 'block';
 
-  document.getElementById('rolesList').style.display = 'block';
-  // Get the element where you want to display the roles
-  var rolesList = document.getElementById('rolesList');
-
-  // Check if roles array is not empty
   if (roles.length > 0) {
-    // Create a variable to store the HTML content
-    var html = '';
-
-    // Loop through each role in the array
-    roles.forEach(function (role) {
-      // Create the HTML for each role
-      html += '<div class="role">' + role + '</div>';
-    });
-
-    // Set the innerHTML of the rolesList element to the generated HTML
+    // Generate HTML for each role
+    const html = roles.map(role => `<div class="role">${role}</div>`).join('');
     rolesList.innerHTML = 'Distribuição está ativa para:' + html;
   } else {
-    // If roles array is empty, you can display a message or do something else
     rolesList.innerHTML = 'Nenhuma Distribuição ativa';
   }
 }
 
+// Function to activate user account
 function activateAccount() {
   if (loggedInUser) {
-    // Show the department modal
+    // Show the department modal for activation
     document.getElementById('departmentModal').style.display = 'block';
   } else {
     alert('Error: User not logged in.');
   }
 }
 
+// Function to deactivate user account
 function deactivateAccount() {
   if (loggedInUser) {
     // Show the deactivate modal
@@ -118,48 +89,50 @@ function deactivateAccount() {
   }
 }
 
+// Function to confirm deactivation of user account
 function confirmDeactivation(modal) {
-  // Get the selected reason from the dropdown
-  var reason = document.getElementById('reason').value;
+  let reason = document.getElementById('reason').value;
 
   if (reason === 'Outros') {
-    // Prompt the user for a custom reason
+    // Prompt user for custom reason if "Outros" selected
     const customReason = prompt('Por favor informe o motivo:');
     if (customReason === null || customReason.trim() === '') {
-      // User canceled or provided an empty reason
       alert('Por favor informe o motivo');
       return;
     }
-
-    // Update the userBody with the custom reason
-    var reason = customReason;
+    reason = customReason;
   }
 
-  var myHeaders = new Headers();
+  // Set request headers
+  const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
-  var userBody = JSON.stringify({
+  // Create JSON data for deactivation request
+  const userBody = JSON.stringify({
     "user": loggedInUser,
     "reason": reason,
     "department": document.getElementById('selector1').value
   });
 
-  var deactivateOptions = {
+  // Set fetch request options for deactivation
+  const deactivateOptions = {
     method: 'POST',
     headers: myHeaders,
     body: userBody,
     redirect: 'follow'
   };
 
+  // Make a fetch request to deactivate user
   fetch("https://n8n.integracao.cloud/webhook/deactivateUser", deactivateOptions)
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      // Add logic to handle successful deactivation
       return response.json();
     })
     .then(data => {
+      // Refresh and display updated user data
+      loginAndActivate();
       alert('Deactivation response:\n' + JSON.stringify(data));
     })
     .catch(error => {
@@ -167,60 +140,65 @@ function confirmDeactivation(modal) {
       alert('Error: Unable to deactivate account. Please try again.');
     });
 
-  // Close the deactivate modal
+  // Close the deactivate modal after processing
   document.getElementById('deactivateModal').style.display = 'none';
-  loginAndActivate()
 }
-function confirmDepartment() {
-  var myHeaders = new Headers();
+
+// Function to confirm activation of user account
+function confirmActivation() {
+  // Set request headers
+  const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
-  var userBody = JSON.stringify({
+  // Create JSON data for activation request
+  const userBody = JSON.stringify({
     "user": loggedInUser,
     "department": document.getElementById('selector2').value
   });
 
-  var activateOptions = {
+  // Set fetch request options for activation
+  const activateOptions = {
     method: 'POST',
     headers: myHeaders,
     body: userBody,
     redirect: 'follow'
   };
 
+  // Make a fetch request to activate user
   fetch("https://n8n.integracao.cloud/webhook/activateUser", activateOptions)
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      // Add logic to handle successful activation
       return response.json();
     })
     .then(data => {
+      // Refresh and display updated user data
+      loginAndActivate();
       alert('Activation response:\n' + JSON.stringify(data));
     })
     .catch(error => {
       console.error('Error:', error.message);
       alert('Error: Unable to activate account. Please try again.');
     });
-  document.getElementById('departmentModal').style.display = 'none';
-  loginAndActivate()
 
+  // Close the department modal after processing
+  document.getElementById('departmentModal').style.display = 'none';
 }
 
+// Function to close modal by ID
 function closeModal(modalId) {
   document.getElementById(modalId).style.display = 'none';
 }
 
-// Get the modal elements
-var deactivateModal = document.getElementById('deactivateModal');
-var departmentModal = document.getElementById('departmentModal');
+// Get the deactivate and department modals
+const deactivateModal = document.getElementById('deactivateModal');
+const departmentModal = document.getElementById('departmentModal');
 
-// Close the modal if the user clicks outside of it
+// Close the modals if clicked outside
 document.addEventListener('click', function (event) {
-  if (event.target == deactivateModal) {
-    deactivateModal.style.display = 'none';
-  }
-  if (event.target == departmentModal) {
-    departmentModal.style.display = 'none';
+  if (event.target == deactivateModal || event.target == departmentModal) {
+    closeModal(deactivateModal);
+    closeModal(departmentModal);
   }
 });
