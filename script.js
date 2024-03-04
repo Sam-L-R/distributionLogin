@@ -51,7 +51,12 @@ function loginAndActivate() {
     })
     .catch(error => {
       console.error('Error:', error.message);
-      alert('Error: Senha incorreta, ou erro do servidor. Tente novamente.');
+      Swal.fire({
+        icon: "error",
+        title: "Error...",
+        text: "Senha incorreta, ou erro do servidor. Tente novamente."
+      });
+      // alert('Error: Senha incorreta, ou erro do servidor. Tente novamente.');
     });
 }
 
@@ -75,7 +80,11 @@ function activateAccount() {
     // Show the department modal for activation
     document.getElementById('departmentModal').style.display = 'block';
   } else {
-    alert('Error: User not logged in.');
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong!"
+    });
   }
 }
 
@@ -85,7 +94,11 @@ function deactivateAccount() {
     // Show the deactivate modal
     document.getElementById('deactivateModal').style.display = 'block';
   } else {
-    alert('Error: User not logged in.');
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong!"
+    });
   }
 }
 
@@ -133,11 +146,19 @@ function confirmDeactivation(modal) {
     .then(data => {
       // Refresh and display updated user data
       loginAndActivate();
-      alert('Deactivation response:\n' + JSON.stringify(data));
+      Swal.fire({
+        title: "Deactivation response",
+        text: JSON.stringify(data),
+        icon: "success"
+      });
     })
     .catch(error => {
       console.error('Error:', error.message);
-      alert('Error: Unable to deactivate account. Please try again.');
+      Swal.fire({
+        icon: "error",
+        title: "Error...",
+        text: "Unable to activate account. Please try again."
+      });
     });
 
   // Close the deactivate modal after processing
@@ -175,11 +196,20 @@ function confirmActivation() {
     .then(data => {
       // Refresh and display updated user data
       loginAndActivate();
-      alert('Activation response:\n' + JSON.stringify(data));
+      Swal.fire({
+        title: "Activation response",
+        text: JSON.stringify(data),
+        icon: "success"
+      });
+      // alert('Activation response:\n' + JSON.stringify(data));
     })
     .catch(error => {
       console.error('Error:', error.message);
-      alert('Error: Unable to activate account. Please try again.');
+      Swal.fire({
+        icon: "error",
+        title: "Error...",
+        text: "Unable to activate account. Please try again."
+      });
     });
 
   // Close the department modal after processing
