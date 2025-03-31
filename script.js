@@ -136,7 +136,7 @@ function confirmDeactivation(modal) {
   };
 
   // Make a fetch request to deactivate user
-  fetch("https://inova.ikatec.cloud/webhookdeactivateUser", deactivateOptions)
+  fetch("https://inova.ikatec.cloud/webhook/deactivateUser", deactivateOptions)
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
